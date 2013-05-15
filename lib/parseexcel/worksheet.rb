@@ -23,7 +23,7 @@
 # Worksheet -- Spreadsheet::ParseExcel -- 10.06.2003 -- hwyss@ywesee.com 
 
 require 'parseexcel/olestorage'
-require 'iconv'
+#require 'iconv'
 
 module Spreadsheet
 	module ParseExcel
@@ -98,9 +98,14 @@ module Spreadsheet
 				def to_s(target_encoding=nil)
 					if(target_encoding)
             begin
-						  Iconv.new(target_encoding, @encoding).iconv(@value)
+						#  Iconv.new(target_encoding, @encoding).iconv(@value)
+						  @value.encode(target_encoding, :invalid => :replace, :undef => :replace, :replace => "?")
+
+
             rescue
-						  Iconv.new(target_encoding, 'ascii').iconv(@value.to_s)
+						 # Iconv.new(target_encoding, "UTF-8").iconv(@value.to_s)
+						  @value.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?")
+
             end
 					else
 						@value.to_s
@@ -147,7 +152,8 @@ module Spreadsheet
 			end
       def name(target_encoding=nil)
         if(target_encoding)
-          Iconv.new(target_encoding, 'UTF-16LE').iconv(@name.to_s)
+         # Iconv.new(target_encoding, 'UTF-16LE').iconv(@name.to_s)
+          @name.to_s.encode("UTF-16LE", :invalid => :replace, :undef => :replace, :replace => "?")
         else
           @name
         end
